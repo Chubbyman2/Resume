@@ -1,0 +1,52 @@
+life_expectancy <- read.csv(".../Life_Expectancy_Data.csv")
+life_expectancy
+summary(life_expectancy)
+head(life_expectancy)
+
+# Visualize the trends first
+plot(life_expectancy$Life.expectancy, life_expectancy$BMI,
+     col = "black",
+     pch = 20,
+     xlab = "Life Expectancy",
+     ylab = "BMI")
+plot(life_expectancy$Life.expectancy, life_expectancy$GDP,
+     col = "black",
+     pch = 20,
+     xlab = "Life Expectancy",
+     ylab = "GDP")
+plot(life_expectancy$Life.expectancy, life_expectancy$Schooling,
+     col = "black",
+     pch = 20,
+     xlab = "Life Expectancy",
+     ylab = "Schooling")
+
+### Linear Regression Model
+
+# Split into training and testing data
+set.seed(2)
+install.packages('caTools')
+library(caTools)
+life_expectancy$Life.expectancy
+
+split <- sample.split(life_expectancy, SplitRatio=0.7)
+split # Returns 70% TRUE, 30% FALSE
+train <- subset(life_expectancy, split="TRUE")
+test <- subset(life_expectancy, split="FALSE")
+train
+test
+
+# Create the model
+model <- lm(Life.expectancy ~.,data=train)
+summary(model)
+
+# Predict
+prediction <- predict(model, test)
+prediction
+
+# Comparing prediction to actual values
+plot(test$Life.expectancy, type = "l", lty= 1.8, col = "black", ylab = "Life Expectancy")
+lines(prediction, type="l", col = "red")
+
+# Finding accuracy
+rmse <- sqrt(mean(prediction - life_expectancy$Life.expectancy)^2)
+rmse 
